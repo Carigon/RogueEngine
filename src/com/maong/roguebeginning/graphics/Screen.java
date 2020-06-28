@@ -7,7 +7,7 @@ public class Screen {
     private int width, height;
     public int[] pixels;
 
-    public int tileSize = 16; //note, this must be a power of two.
+    public int spriteSize = 16; //note, this must be a power of two. equates to a 16x16 tile/sprite
     public int bitWiseForTileSize;
     public int mapTileRows = 64;
     public int mapTileCols = 64;
@@ -25,12 +25,12 @@ public class Screen {
         }
     }
 
-    public void render(){
+    public void render(int xOffset, int yOffset){
         for (int row = 0; row < height; row++){
-            int rowrow = row;
+            int rowrow = row+yOffset;
             //if(rowrow < 0 || rowrow >= height) break;
             for (int col = 0; col < width; col++){
-                int colcol = col+40;
+                int colcol = col+xOffset;
                 //if(colcol < 0 || colcol >= height) break;
                 int tileIndex = ((colcol >> bitWiseForTileSize) & mapTileCols-1) + ((rowrow >> bitWiseForTileSize) & mapTileCols-1) * mapTileCols;
                 pixels[col + row * width] = mapTiles[tileIndex];
@@ -45,8 +45,8 @@ public class Screen {
     private int getBitwiseForTileSize(){
         int start = 2;
         int counter = 1;
-        if(tileSize<2) return 0;
-        while (start < tileSize){
+        if(spriteSize <2) return 0;
+        while (start < spriteSize){
             start = start*2;
             counter++;
         }
