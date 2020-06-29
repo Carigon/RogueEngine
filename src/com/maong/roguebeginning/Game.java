@@ -2,6 +2,8 @@ package com.maong.roguebeginning;
 
 import com.maong.roguebeginning.graphics.Screen;
 import com.maong.roguebeginning.input.Keyboard;
+import com.maong.roguebeginning.level.Level;
+import com.maong.roguebeginning.level.RandomLevel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +29,7 @@ public class Game extends Canvas implements Runnable {
     private boolean running = false;//boolean tracking whether the game is running or not.
     private Screen screen;//Screen object that we manipulate for display
     private Keyboard key;//Keyboard object that handles input from the user.
+    private Level level;//holds the current level to be rendered.
 
     //contains the actual image data to be displayed in the Frame/Canvas.
     private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -38,10 +41,9 @@ public class Game extends Canvas implements Runnable {
         Dimension size = new Dimension(width * scale, height * scale);
         setPreferredSize(size);
         screen = new Screen(width, height);
-
         frame = new JFrame();
-
         key = new Keyboard();//initialize the keyboard and add the listener (awt component)
+        level = new RandomLevel(64, 64);
         addKeyListener(key);
     }
 
@@ -111,7 +113,8 @@ public class Game extends Canvas implements Runnable {
         }
 
         screen.clear();
-        screen.render(colM, rowM);
+        level.render(colM, rowM, screen);
+
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = screen.pixels[i];
         }
