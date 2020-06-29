@@ -1,5 +1,6 @@
 package com.maong.roguebeginning;
 
+import com.maong.roguebeginning.entity.mob.player.Player;
 import com.maong.roguebeginning.graphics.Screen;
 import com.maong.roguebeginning.input.Keyboard;
 import com.maong.roguebeginning.level.Level;
@@ -15,6 +16,8 @@ import java.awt.image.DataBufferInt;
  can draw or from which the application can trap input events from the user.*/
 
 public class Game extends Canvas implements Runnable {
+    private static boolean isDebug = false;
+
     private static final long serialVersionUID = 1L;
     private static final String TITLE = "Rogue";
 
@@ -30,8 +33,9 @@ public class Game extends Canvas implements Runnable {
     private Screen screen;//Screen object that we manipulate for display
     private Keyboard key;//Keyboard object that handles input from the user.
     private Level level;//holds the current level to be rendered.
+    private Player player;//holds the player object.
 
-    //contains the actual image data to be displayed in the Frame/Canvas.
+    //contains the actual image data to be displayed in the Frame/Canvas. Then sets the data buffer for the buffered image to point to pixels.
     private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
@@ -44,6 +48,8 @@ public class Game extends Canvas implements Runnable {
         frame = new JFrame();
         key = new Keyboard();//initialize the keyboard and add the listener (awt component)
         level = new RandomLevel(64, 64);
+        player = new Player(key);
+
         addKeyListener(key);
     }
 
@@ -94,15 +100,9 @@ public class Game extends Canvas implements Runnable {
         stop();
     }
 
-    int rowM = 0;
-    int colM = 0;
-
     public void update() {
         key.update();
-        if (key.up) rowM--;
-        if (key.down) rowM++;
-        if (key.left) colM--;
-        if (key.right) colM++;
+        player.update();
     }
 
     public void render() {
@@ -113,17 +113,34 @@ public class Game extends Canvas implements Runnable {
         }
 
         screen.clear();
-        level.render(colM, rowM, screen);
 
+        int xScroll = player.x - screen.getWidth()/2;
+        int yScroll = player.y - screen.getHeight()/2;
+
+        //renders each layer in turn
+        level.render(xScroll, yScroll, screen);
+        player.render(screen);
+
+        //iterates through the size of the pixels array and sets the screen's pixels = to the same index in screen.pixels.
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = screen.pixels[i];
         }
 
+        //creates a new graphics object, sets the default background color, and then fills that.
         Graphics g = bs.getDrawGraphics();
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
 
+        //draws the image (bufferedImage) in the screen.  remember, data for image is backed by the pixels array you've already processed above.
         g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+
+        //for drawing debug information
+        if(isDebug) {
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Verdana", 0, 50));
+            g.drawString("Player - X: " + player.x + " Y: " + player.y, 0, 50);
+            g.drawString("Player - dir: " + player.getDir(), 0, 100);
+        }
 
         //dispose dumps the current graphical assets, freeing the memory.
         g.dispose();

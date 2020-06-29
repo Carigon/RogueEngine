@@ -1,5 +1,6 @@
 package com.maong.roguebeginning.graphics;
 
+import com.maong.roguebeginning.entity.mob.player.Player;
 import com.maong.roguebeginning.level.tile.Tile;
 
 import java.util.Arrays;
@@ -53,6 +54,21 @@ public class Screen {
                 if(xa<0) xa = 0;
                 if(ya<0) ya = 0;
                 pixels[xa + ya * width] = tile.sprite.pixels[x + y * tile.sprite.SIZE];
+            }
+        }
+    }
+
+    public void renderPlayer(int xp, int yp, Player player){
+        xp -= xOffset;
+        yp -= yOffset;
+        for(int y = 0; y < player.getSprite().SIZE; y++){
+            int ya = y + yp; // ya (y absolute) is equal to the y pos plus some offset (yp).
+            for(int x = 0; x < player.getSprite().SIZE; x++){
+                int xa = x + xp; // xa (x absolute) is equal to the x pos plus some offset (xp).
+                if(xa < -player.getSprite().SIZE || xa >= width || ya < -player.getSprite().SIZE || ya >= height) break; //ensures that tiles that are outside of render area are not rendered.
+                if(xa<0) xa = 0;
+                if(ya<0) ya = 0;
+                pixels[xa + ya * width] = player.getSprite().pixels[x + y * player.getSprite().SIZE];
             }
         }
     }
