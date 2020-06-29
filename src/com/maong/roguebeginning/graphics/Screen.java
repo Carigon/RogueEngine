@@ -13,41 +13,40 @@ public class Screen {
     public int mapTileCols = 64;
     public int[] mapTiles = new int[mapTileCols * mapTileRows];
 
-    private Random random  = new Random();
+    private Random random = new Random();
 
-    public Screen(int width, int height){
+    public Screen(int width, int height) {
         this.width = width;
         this.height = height;
         bitWiseForTileSize = getBitwiseForTileSize();
         pixels = new int[width * height];
-        for(int i = 0; i < mapTileCols * mapTileRows; i++){
+        /*for (int i = 0; i < mapTileCols * mapTileRows; i++) {
             mapTiles[i] = random.nextInt(0xffffff);
-        }
+        }*/
     }
 
-    public void render(int xOffset, int yOffset){
-        for (int row = 0; row < height; row++){
-            int rowrow = row+yOffset;
-            //if(rowrow < 0 || rowrow >= height) break;
-            for (int col = 0; col < width; col++){
-                int colcol = col+xOffset;
-                //if(colcol < 0 || colcol >= height) break;
-                int tileIndex = ((colcol >> bitWiseForTileSize) & mapTileCols-1) + ((rowrow >> bitWiseForTileSize) & mapTileCols-1) * mapTileCols;
-                pixels[col + row * width] = mapTiles[tileIndex];
+    public void render(int xOffset, int yOffset) {
+        for (int row = 0; row < height; row++) {
+            int rowp = row + yOffset;
+            if (rowp < 0 || rowp >= height) continue;
+            for (int col = 0; col < width; col++) {
+                int colp = col + xOffset;
+                if (colp < 0 || colp >= width) continue;
+                pixels[colp + rowp * width] = Sprite.grass.pixels[(col & 15) + (row & 15) * Sprite.grass.SIZE];
             }
         }
     }
 
-    public void clear(){
+    public void clear() {
         Arrays.fill(pixels, 0);
     }
 
-    private int getBitwiseForTileSize(){
+    private int getBitwiseForTileSize() {
         int start = 2;
         int counter = 1;
-        if(spriteSize <2) return 0;
-        while (start < spriteSize){
-            start = start*2;
+        if (spriteSize < 2) return 0;
+        while (start < spriteSize) {
+            start = start * 2;
             counter++;
         }
         return counter;
