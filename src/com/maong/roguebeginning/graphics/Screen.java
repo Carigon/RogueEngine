@@ -43,37 +43,49 @@ public class Screen {
 
     }*/
 
-    public void renderTile(int xp, int yp, Tile tile){
+    public void renderTile(int xp, int yp, Tile tile) {
         xp -= xOffset;
         yp -= yOffset;
-        for(int y = 0; y < tile.sprite.SIZE; y++){
+        for (int y = 0; y < tile.sprite.SIZE; y++) {
             int ya = y + yp; // ya (y absolute) is equal to the y pos plus some offset (yp).
-            for(int x = 0; x < tile.sprite.SIZE; x++){
+            for (int x = 0; x < tile.sprite.SIZE; x++) {
                 int xa = x + xp; // xa (x absolute) is equal to the x pos plus some offset (xp).
-                if(xa < -tile.sprite.SIZE || xa >= width || ya < -tile.sprite.SIZE || ya >= height) break; //ensures that tiles that are outside of render area are not rendered.
-                if(xa<0) xa = 0;
-                if(ya<0) ya = 0;
+                if (xa < -tile.sprite.SIZE || xa >= width || ya < -tile.sprite.SIZE || ya >= height)
+                    break; //ensures that tiles that are outside of render area are not rendered.
+                if (xa < 0) xa = 0;
+                if (ya < 0) ya = 0;
                 pixels[xa + ya * width] = tile.sprite.pixels[x + y * tile.sprite.SIZE];
             }
         }
     }
 
-    public void renderPlayer(int xp, int yp, Player player){
+    public void renderPlayer(int xp, int yp, Sprite sprite) {
+        int flip = 0;
+        renderPlayer(xp, yp, sprite, flip);
+    }
+
+    public void renderPlayer(int xp, int yp, Sprite sprite, int flip) {
         xp -= xOffset;
         yp -= yOffset;
-        for(int y = 0; y < player.getSprite().SIZE; y++){
+        for (int y = 0; y < sprite.SIZE; y++) {
             int ya = y + yp; // ya (y absolute) is equal to the y pos plus some offset (yp).
-            for(int x = 0; x < player.getSprite().SIZE; x++){
+            int ys = y;
+            if (flip == 2 || flip == 3) ys = sprite.SIZE - 1 - y;
+            for (int x = 0; x < sprite.SIZE; x++) {
                 int xa = x + xp; // xa (x absolute) is equal to the x pos plus some offset (xp).
-                if(xa < -player.getSprite().SIZE || xa >= width || ya < -player.getSprite().SIZE || ya >= height) break; //ensures that tiles that are outside of render area are not rendered.
-                if(xa<0) xa = 0;
-                if(ya<0) ya = 0;
-                pixels[xa + ya * width] = player.getSprite().pixels[x + y * player.getSprite().SIZE];
+                int xs = x;
+                if (flip == 1 || flip == 3) xs = sprite.SIZE - 1 - x;
+                if (xa < -sprite.SIZE || xa >= width || ya < -sprite.SIZE || ya >= height)
+                    break; //ensures that tiles that are outside of render area are not rendered.
+                if (xa < 0) xa = 0;
+                if (ya < 0) ya = 0;
+                int col = sprite.pixels[xs + ys * sprite.SIZE];
+                if (col != 0x00000000) pixels[xa + ya * width] = col;
             }
         }
     }
 
-    public void setOffset(int xOffset, int yOffset){
+    public void setOffset(int xOffset, int yOffset) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
     }
