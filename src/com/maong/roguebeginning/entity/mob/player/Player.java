@@ -1,6 +1,7 @@
 package com.maong.roguebeginning.entity.mob.player;
 
 import com.maong.roguebeginning.entity.mob.Mob;
+import com.maong.roguebeginning.graphics.PlayerSprite;
 import com.maong.roguebeginning.graphics.Screen;
 import com.maong.roguebeginning.graphics.Sprite;
 import com.maong.roguebeginning.input.Keyboard;
@@ -23,16 +24,16 @@ public class Player extends Mob {
 
     public Player(Keyboard input) {
         this.input = input;
-        sprite = Sprite.playerS;
+        sprite = PlayerSprite.playerS;
         this.spriteMap = new HashMap<>();
-        spriteMap.put(0, new Sprite[]{Sprite.playerN, Sprite.playerNR, Sprite.playerN, Sprite.playerNL});
-        spriteMap.put(1, new Sprite[]{Sprite.playerNE, Sprite.playerNER, Sprite.playerNE, Sprite.playerNEL});
-        spriteMap.put(2, new Sprite[]{Sprite.playerE, Sprite.playerER, Sprite.playerE, Sprite.playerEL});
-        spriteMap.put(3, new Sprite[]{Sprite.playerSE, Sprite.playerSER, Sprite.playerSE, Sprite.playerSEL});
-        spriteMap.put(4, new Sprite[]{Sprite.playerS, Sprite.playerSR, Sprite.playerS, Sprite.playerSL});
-        spriteMap.put(5, new Sprite[]{Sprite.playerSW, Sprite.playerSWR, Sprite.playerSW, Sprite.playerSWL});
-        spriteMap.put(6, new Sprite[]{Sprite.playerW, Sprite.playerWR, Sprite.playerW, Sprite.playerWL});
-        spriteMap.put(7, new Sprite[]{Sprite.playerNW, Sprite.playerNWR, Sprite.playerNW, Sprite.playerNWL});
+        spriteMap.put(0, new Sprite[]{PlayerSprite.playerN, PlayerSprite.playerNR, PlayerSprite.playerN, PlayerSprite.playerNL});
+        spriteMap.put(1, new Sprite[]{PlayerSprite.playerNE, PlayerSprite.playerNER, PlayerSprite.playerNE, PlayerSprite.playerNEL});
+        spriteMap.put(2, new Sprite[]{PlayerSprite.playerE, PlayerSprite.playerER, PlayerSprite.playerE, PlayerSprite.playerEL});
+        spriteMap.put(3, new Sprite[]{PlayerSprite.playerSE, PlayerSprite.playerSER, PlayerSprite.playerSE, PlayerSprite.playerSEL});
+        spriteMap.put(4, new Sprite[]{PlayerSprite.playerS, PlayerSprite.playerSR, PlayerSprite.playerS, PlayerSprite.playerSL});
+        spriteMap.put(5, new Sprite[]{PlayerSprite.playerSW, PlayerSprite.playerSWR, PlayerSprite.playerSW, PlayerSprite.playerSWL});
+        spriteMap.put(6, new Sprite[]{PlayerSprite.playerW, PlayerSprite.playerWR, PlayerSprite.playerW, PlayerSprite.playerWL});
+        spriteMap.put(7, new Sprite[]{PlayerSprite.playerNW, PlayerSprite.playerNWR, PlayerSprite.playerNW, PlayerSprite.playerNWL});
     }
 
     @Override

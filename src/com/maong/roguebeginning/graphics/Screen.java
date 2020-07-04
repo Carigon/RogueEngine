@@ -57,7 +57,10 @@ public class Screen {
                     break; //ensures that tiles that are outside of render area are not rendered.
                 if (xa < 0) xa = 0;
                 if (ya < 0) ya = 0;
-                pixels[xa + ya * width] = tile.sprite.pixels[x + y * tile.sprite.SIZE];
+                int value = tile.sprite.pixels[x + y * tile.sprite.SIZE];
+                if(value != 0x00000000) {
+                    pixels[xa + ya * width] = value;
+                }
             }
         }
     }

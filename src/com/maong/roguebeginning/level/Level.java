@@ -1,6 +1,7 @@
 package com.maong.roguebeginning.level;
 
 import com.maong.roguebeginning.graphics.Screen;
+import com.maong.roguebeginning.jsonsupport.JsonLevelMap;
 import com.maong.roguebeginning.level.tile.Tile;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ public class Level {
     protected int height; // only for random generation. in tiles.
     protected int[] tilesInt;
     protected int[] tiles;
+    protected JsonLevelMap levelData;
     protected Map<Integer, Tile> tileMap;
 
     /**
@@ -92,9 +94,11 @@ public class Level {
         int y0 = yScroll >> screen.bitWiseForTileSize;
         int y1 = (yScroll + screen.getHeight() + screen.tileSize) >> screen.bitWiseForTileSize;
 
-        for (int y = y0; y < y1; y++) {
-            for (int x = x0; x < x1; x++) {
-                getTile(x, y).render(x, y, screen);
+        for (int z = levelData.getLayers().length - 1; z >= 0; z--) {
+            for (int y = y0; y < y1; y++) {
+                for (int x = x0; x < x1; x++) {
+                    this.getTile(x, y, z).render(x, y, screen);
+                }
             }
         }
     }
@@ -110,6 +114,13 @@ public class Level {
         //check to see if position to be rendered is out of bounds. returns voidTile if rendering would cause IOOB.
         if (x < 0 || x >= width || y < 0 || y >= height) return Tile.voidTile;
         Tile temp = tileMap.get(tiles[x + y * width]);
+        if (temp != null) return temp;
+        else return Tile.voidTile;
+    }
+
+    public Tile getTile(int x , int y, int z){
+        if (x < 0 || x >= width || y < 0 || y >= height) return Tile.voidTile;
+        Tile temp = tileMap.get(levelData.getLayers()[z].getTiles()[x + y * width].getTile());
         if (temp != null) return temp;
         else return Tile.voidTile;
     }
