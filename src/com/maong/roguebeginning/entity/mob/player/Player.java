@@ -12,8 +12,8 @@ public class Player extends Mob {
     private Keyboard input;
     private Map<Integer, Sprite[]> spriteMap;
     private int anim = 0;
-    private int pacing = 20;
-    private int gait = 0;
+    private int pacing = 15;
+    private int frame = 0;
 
     public Player(Keyboard input, int x, int y) {
         this(input);
@@ -39,7 +39,7 @@ public class Player extends Mob {
     public void update() {
         if (anim < Integer.MAX_VALUE) anim++;
         else anim = 0;
-        if(anim%pacing == 0) gait++;
+        if(anim%pacing == 0) frame++;
 
         int xa = 0;
         int ya = 0;
@@ -57,7 +57,7 @@ public class Player extends Mob {
     @Override
     public void render(Screen screen) {
         if (moving) {
-            sprite = spriteMap.get(dir)[gait % spriteMap.get(dir).length];
+            sprite = spriteMap.get(dir)[frame % spriteMap.get(dir).length];
         } else {
             sprite = spriteMap.get(dir)[0];
         }

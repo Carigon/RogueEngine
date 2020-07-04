@@ -1,6 +1,5 @@
 package com.maong.roguebeginning.graphics;
 
-import com.maong.roguebeginning.entity.mob.player.Player;
 import com.maong.roguebeginning.level.tile.Tile;
 
 import java.util.Arrays;
@@ -12,7 +11,7 @@ public class Screen {
     private int width, height;
     public int[] pixels;
 
-    public int spriteSize = 16; //note, this must be a power of two. equates to a 16x16 tile/sprite
+    public int tileSize = 16; //note, this must be a power of two. equates to a 16x16 tile/sprite
     public int bitWiseForTileSize;
     public int mapSize = 64;
     public int xOffset, yOffset;
@@ -44,6 +43,10 @@ public class Screen {
     }*/
 
     public void renderTile(int xp, int yp, Tile tile) {
+        renderTile(xp, yp, tile, 0);
+    }
+
+    public void renderTile(int xp, int yp, Tile tile, int hueshift) {
         xp -= xOffset;
         yp -= yOffset;
         for (int y = 0; y < tile.sprite.SIZE; y++) {
@@ -97,8 +100,8 @@ public class Screen {
     private int getBitwiseForTileSize() {
         int start = 2;
         int counter = 1;
-        if (spriteSize < 2) return 0;
-        while (start < spriteSize) {
+        if (tileSize < 2) return 0;
+        while (start < tileSize) {
             start = start * 2;
             counter++;
         }

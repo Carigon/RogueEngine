@@ -3,9 +3,15 @@ package com.maong.roguebeginning.level;
 import com.maong.roguebeginning.graphics.Screen;
 import com.maong.roguebeginning.level.tile.Tile;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Level {
-    protected int width, height; // only for random generation. in tiles.
+    protected int width;
+    protected int height; // only for random generation. in tiles.
+    protected int[] tilesInt;
     protected int[] tiles;
+    protected Map<Integer, Tile> tileMap;
 
     /**
      * constructor for Level where level is randomly generated.
@@ -16,7 +22,7 @@ public class Level {
     public Level(int width, int height) {
         this.width = width;
         this.height = height;
-        tiles = new int[width * height];
+        tilesInt = new int[width * height];
         generateLevel();
     }
 
@@ -26,14 +32,21 @@ public class Level {
      * @param path within the class path, specifies the location of the file containing level data.
      */
     public Level(String path) {
+        tileMap = generateTileMap();
         loadLevel(path);
+        generateLevel();
+    }
+
+    //public Level()
+
+    public Level() {
+
     }
 
     /**
-     * Generates a Random Level.  primarily for testing/debugging purposes.
+     * Generates a Level.  primarily for testing/debugging purposes.
      */
     protected void generateLevel() {
-
     }
 
     /**
@@ -41,7 +54,7 @@ public class Level {
      *
      * @param path within the class path, specifies the location of the file containing level data.
      */
-    private void loadLevel(String path) {
+    protected void loadLevel(String path) {
 
     }
 
@@ -75,14 +88,12 @@ public class Level {
         /*setting the corner pins.  this determines the render area, and is 1 tile larger in the x and y directions than the screen itself.
         converting those values from pixel precision to tile precision by through a bitwise operation based on tile size.*/
         int x0 = xScroll >> screen.bitWiseForTileSize;
-        int x1 = (xScroll + screen.getWidth()+screen.spriteSize) >> screen.bitWiseForTileSize;
+        int x1 = (xScroll + screen.getWidth() + screen.tileSize) >> screen.bitWiseForTileSize;
         int y0 = yScroll >> screen.bitWiseForTileSize;
-        int y1 = (yScroll + screen.getHeight()+screen.spriteSize) >> screen.bitWiseForTileSize;
+        int y1 = (yScroll + screen.getHeight() + screen.tileSize) >> screen.bitWiseForTileSize;
 
         for (int y = y0; y < y1; y++) {
-            if (y < 0 || y >= width) continue;
             for (int x = x0; x < x1; x++) {
-                if (x < 0 || x >= width) continue;
                 getTile(x, y).render(x, y, screen);
             }
         }
@@ -97,8 +108,35 @@ public class Level {
      */
     public Tile getTile(int x, int y) {
         //check to see if position to be rendered is out of bounds. returns voidTile if rendering would cause IOOB.
-        if (x < 0 || x >= width || y < 0 || x >= height) return Tile.voidTile;
-        if (tiles[x + y * width] == 0) return Tile.grass;
-        return Tile.voidTile;
+        if (x < 0 || x >= width || y < 0 || y >= height) return Tile.voidTile;
+        Tile temp = tileMap.get(tiles[x + y * width]);
+        if (temp != null) return temp;
+        else return Tile.voidTile;
     }
+
+    /**
+     * generates by color code -> tile type
+     * Grass = 0x00FF00
+     * GrassFlower = 0xFFFF00
+     * RockFlower = 0xBBBBBB
+     * Ocean = 0x0000FF
+     */
+    protected Map<Integer, Tile> generateTileMap(){
+        Map<Integer, Tile> map = new HashMap<>();
+        map.put(0xff00ff00, Tile.grass);
+        map.put(0xFFFFFF00, Tile.grassFlower);
+        map.put(0xFFBBBBBB, Tile.grassRock);
+        map.put(0xFF0000FF, Tile.ocean);
+        return map;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+
 }

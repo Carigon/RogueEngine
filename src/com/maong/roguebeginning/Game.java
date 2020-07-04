@@ -4,7 +4,7 @@ import com.maong.roguebeginning.entity.mob.player.Player;
 import com.maong.roguebeginning.graphics.Screen;
 import com.maong.roguebeginning.input.Keyboard;
 import com.maong.roguebeginning.level.Level;
-import com.maong.roguebeginning.level.RandomLevel;
+import com.maong.roguebeginning.level.SpawnLevel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ import java.awt.image.DataBufferInt;
  can draw or from which the application can trap input events from the user.*/
 
 public class Game extends Canvas implements Runnable {
-    private static boolean isDebug = false;
+    private static boolean isDebug = true;
 
     private static final long serialVersionUID = 1L;
     private static final String TITLE = "Rogue";
@@ -39,16 +39,14 @@ public class Game extends Canvas implements Runnable {
     private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
-    private boolean displayMetrics = true;
-
     public Game() {
         Dimension size = new Dimension(width * scale, height * scale);
         setPreferredSize(size);
         screen = new Screen(width, height);
         frame = new JFrame();
         key = new Keyboard();//initialize the keyboard and add the listener (awt component)
-        level = new RandomLevel(64, 64);
-        player = new Player(key);
+        level = new SpawnLevel("/textures/levels/testlevel.png");
+        player = new Player(key, level.getWidth()*screen.tileSize /2, level.getHeight()*screen.tileSize /2);
 
         addKeyListener(key);
     }
